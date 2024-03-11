@@ -12,6 +12,11 @@ This project is an example Express.js project using the Firebase Firestore datab
 ## Installation
 
 1. yarn install
+2. Create a new GCP project and connect it to Firebase
+3. Create a new Web App to get the Firebase App credentials
+4. Create a new service account through the project settings in Firebase for the firebase-admin credentials
+5. Download the service key file and put it in the root directory of this project. Rename it to firebase_key.json
+6. You should be able to start the project and add some favorite colors for your favorite people!
 
 ## Usage
 
