@@ -3,32 +3,12 @@ import dotenv from 'dotenv';
 import path from 'path';
 import bodyParser from 'body-parser';
 import multer from 'multer';
-import admin from 'firebase-admin';
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import * as admin from 'firebase-admin';
+import initializeFirebase from './firebase-config';
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "REPLACE ME",
-  authDomain: "REPLACE ME",
-  projectId: "REPLACE ME",
-  storageBucket: "REPLACE ME",
-  messagingSenderId: "REPLACE ME",
-  appId: "REPLACE ME"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeFirebase();
 
 type Person = {id: string, name: string, color: string};
-
-const serviceAccount = require(path.join(__dirname,'..','firebase_key.json'));
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
 
 const db = admin.firestore();
 
