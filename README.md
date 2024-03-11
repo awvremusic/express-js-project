@@ -1,6 +1,6 @@
 # People's Favorite Colors
 
-This project is an example Express.js project using the Firebase Firestore database and showing how to make a quick API and serve HTML through the server-side.
+This project is an example Express.js project using the Firebase Firestore database and showing how to make a quick API and serve HTML through the server-side. This project also uses Google App Engine to run a virtually penniless container in the GCP platform.
 
 ## Table of Contents
 
