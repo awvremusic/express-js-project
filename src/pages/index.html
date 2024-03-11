@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Test App</title>
+</head>
+<body>
+    <h1>People's Favorite Color List</h1>
+    <a href="/add-person">Add Person</a>
+    <div
+        id="person-color-list"
+        style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        "
+    ></div>
+    <script>
+        fetch('/api/people')
+            .then((res) => res.json())
+            .then((data) => {
+                const personColorList = document.getElementById('person-color-list');
+                data.forEach((person) => {
+                    const personDiv= document.createElement('div');
+                    personDiv.style.display = 'flex';
+                    personDiv.style.flexDirection = 'row';
+                    personDiv.style.alignItems = 'center';
+                    personDiv.style.justifyContent = 'center';
+                    personDiv.style.margin = '10px';
+                    personDiv.style.gap = '10px';
+                    
+                    const personColorDot = document.createElement('div');
+                    personColorDot.style.backgroundColor = person.color;
+                    personColorDot.style.width = '100px';
+                    personColorDot.style.height = '100px';
+                    personColorDot.style.margin = '10px';
+                    personColorDot.style.borderRadius = '50%';
+                    personDiv.appendChild(personColorDot);
+
+                    const personName = document.createElement('h2');
+                    personName.textContent = person.name;
+                    personDiv.appendChild(personName);
+
+                    personColorList.appendChild(personDiv);
+                });
+            });
+    </script>
+</body>
+</html>
