@@ -4,6 +4,23 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import admin from 'firebase-admin';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCdjNth3LhNojcvECadv8yk0ziB5rVbT1s",
+  authDomain: "peoples-colors-list.firebaseapp.com",
+  projectId: "peoples-colors-list",
+  storageBucket: "peoples-colors-list.appspot.com",
+  messagingSenderId: "269355197994",
+  appId: "1:269355197994:web:8099c6413a549a064ac553"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 type Person = {id: string, name: string, color: string};
 
@@ -37,9 +54,9 @@ server.post('/api/add-person', upload.none(), (req: Request, res: Response) => {
   const { fullName, color } = req.body;
 
   const peopleCollection = db.collection('people');
-  peopleCollection.add({ name: fullName, color })
+  peopleCollection.doc(fullName).set({ name: fullName, color })
     .then((docRef: any) => {
-      console.log("Document written with ID: ", docRef.id);
+      console.log("Document written with ID: ", fullName);
     })
     .catch((error: any) => {
       console.error("Error adding document: ", error);
@@ -66,6 +83,24 @@ server.get('/api/people', (req, res) => {
     .finally(() => {
       res.status(200);
       res.json(people);
+    });
+});
+
+server.post('/api/delete-person', (req: Request, res: Response) => {
+  const { name } = req.body;
+  const peopleCollection = db.collection('people');
+  peopleCollection.doc(name).delete()
+    .then(() => {
+      console.log("Document successfully deleted!");
+    })
+    .catch((error: any) => {
+      console.error("Error removing document: ", error);
+      res.status(500);
+      res.send('Error removing document');
+    })
+    .finally(() => {
+      res.status(200);
+      res.send('Person deleted');
     });
 });
 

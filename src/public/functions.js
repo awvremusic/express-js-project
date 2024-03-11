@@ -7,6 +7,7 @@ function getPeople() {
 
             data.forEach((person) => {
                 const personDiv= document.createElement('div');
+                personDiv.id = person.name;
                 personDiv.style.display = 'flex';
                 personDiv.style.flexDirection = 'row';
                 personDiv.style.alignItems = 'center';
@@ -25,6 +26,30 @@ function getPeople() {
                 const personName = document.createElement('h2');
                 personName.textContent = person.name;
                 personDiv.appendChild(personName);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => {
+                    fetch('/api/delete-person', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accepts': 'application/json',
+                        },
+                        body: JSON.stringify({ name: person.name }),
+                    })
+                    .then((data) => {
+                        console.log(data);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        getPeople();
+                    });
+                };
+
+                personDiv.appendChild(deleteButton);
 
                 personColorList.appendChild(personDiv);
             });
