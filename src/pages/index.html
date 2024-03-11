@@ -18,35 +18,9 @@
             height: 100vh;
         "
     ></div>
+    <script src="functions.js"></script>
     <script>
-        fetch('/api/people')
-            .then((res) => res.json())
-            .then((data) => {
-                const personColorList = document.getElementById('person-color-list');
-                data.forEach((person) => {
-                    const personDiv= document.createElement('div');
-                    personDiv.style.display = 'flex';
-                    personDiv.style.flexDirection = 'row';
-                    personDiv.style.alignItems = 'center';
-                    personDiv.style.justifyContent = 'center';
-                    personDiv.style.margin = '10px';
-                    personDiv.style.gap = '10px';
-                    
-                    const personColorDot = document.createElement('div');
-                    personColorDot.style.backgroundColor = person.color;
-                    personColorDot.style.width = '100px';
-                    personColorDot.style.height = '100px';
-                    personColorDot.style.margin = '10px';
-                    personColorDot.style.borderRadius = '50%';
-                    personDiv.appendChild(personColorDot);
-
-                    const personName = document.createElement('h2');
-                    personName.textContent = person.name;
-                    personDiv.appendChild(personName);
-
-                    personColorList.appendChild(personDiv);
-                });
-            });
+        fetchPeople();
     </script>
 </body>
 </html>

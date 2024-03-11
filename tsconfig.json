@@ -8,12 +8,10 @@
     "esModuleInterop": true, // Enable interoperability between CommonJS and ES Modules
     "resolveJsonModule": true, // Enable importing JSON files as modules
     "sourceMap": true, // Generate source maps for easier debugging
-    "typeRoots": [
-        "./node_modules/@types" // Specify the location to install type definition files
-    ],
 },
   "include": [
-    "src/**/*.ts" // Specify the files to be included for compilation
+    "src/**/*.ts", // Specify the files to be included for compilation
+    "types.d.ts"
 ],
   "exclude": [
     "node_modules" // Specify the files to be excluded from compilation

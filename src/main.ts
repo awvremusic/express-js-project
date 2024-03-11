@@ -3,38 +3,72 @@ import dotenv from 'dotenv';
 import path from 'path';
 import bodyParser from 'body-parser';
 import multer from 'multer';
+import admin from 'firebase-admin';
+
+type Person = {id: string, name: string, color: string};
+
+const serviceAccount = require(path.join(__dirname,'..','firebase_key.json'));
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
 
 const upload = multer();
 
 dotenv.config();
 
-const app = express();
+const server = express();
 const port = process.env.PORT || 8080;
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.json());
+server.use(express.static(path.join(__dirname, 'public')));
 
-const people: {name: string, color: string}[] = [];
-
-app.get('/', (req, res) => {
+server.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'pages', 'index.html'));
 });
 
-app.get('/add-person', (req, res) => {
+server.get('/add-person', (req, res) => {
   res.sendFile(path.join(__dirname, 'pages', 'add-person.html'));
 });
 
-app.post('/api/add-person', upload.none(), (req: Request, res: Response) => {
-  console.log(req.body)
+server.post('/api/add-person', upload.none(), (req: Request, res: Response) => {
   const { fullName, color } = req.body;
-  people.push({ name: fullName, color });
+
+  const peopleCollection = db.collection('people');
+  peopleCollection.add({ name: fullName, color })
+    .then((docRef: any) => {
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch((error: any) => {
+      console.error("Error adding document: ", error);
+    });
+
   res.redirect('/');
 });
 
-app.get('/api/people', (req, res) => {
-  res.json(people);
+server.get('/api/people', (req, res) => {
+  const people: Person[] = [];
+  const peopleCollection = db.collection('people');
+  peopleCollection.get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (doc.exists) {
+          const person = doc.data() as {name: string, color: string};
+          people.push({id: doc.id, ...person});
+        }
+      });
+    })
+    .catch((error: any) => {
+      console.log("Error getting documents: ", error);
+    })
+    .finally(() => {
+      res.status(200);
+      res.json(people);
+    });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
